@@ -1,0 +1,35 @@
+import sys
+import gzip
+
+file_name = 'GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_reads.gct'
+
+def get_counts(gene_name, out_file_name):
+    #gene_name = sys.argv[2]
+    #out_file_name = sys.argv[3]
+
+    o = open(out_file_name, 'w')
+
+    version = None
+    dim = None
+    header = None
+
+    f = open(file_name, 'rt')
+    for l in f:
+        A = l.rstrip().split('\t')
+        if version is None:
+            version = A
+            continue
+        if dim is None:
+            dim = A
+            continue
+        if header is None:
+            header = A
+            continue
+        if A[1] == gene_name:
+            for i in range(2, len(header)):
+                o.write(header[i] + ' ' + A[i] + '\n')
+    f.close()
+    o.close()
+
+
+get_counts('SDHB', 'test.txt')
